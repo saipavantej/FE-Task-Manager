@@ -1,5 +1,5 @@
 import platformCheck from '@utils/platformCheck';
-import {getScaledDimension} from '@utils/scaleDimennsion';
+import {getScaledDimension} from '@utils/scaleDimension';
 import {TextStyle} from 'react-native';
 
 const FontSize = {
