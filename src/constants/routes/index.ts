@@ -8,8 +8,7 @@ export type AuthStackParamList = {
   Login: undefined;
   ForgetPassword: undefined;
   SignUp: undefined;
-  AccountVerification: undefined;
-  ResetPassword: undefined;
+  ResetPassword: {email: string};
 };
 
 export type MainStackParamList = {

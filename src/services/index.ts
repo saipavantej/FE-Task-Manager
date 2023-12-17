@@ -11,8 +11,7 @@ const loginApi = async (body: any) => {
     });
 };
 
-const signUpApi = async (params: any) => {
-  const {body} = params;
+const signUpApi = async (body: any) => {
   return appService
     .post('user/signup', body)
     .then(function (response: any) {
@@ -23,8 +22,7 @@ const signUpApi = async (params: any) => {
     });
 };
 
-const forgetPasswordApi = async (params: any) => {
-  const {body} = params;
+const forgetPasswordApi = async (body: any) => {
   return appService
     .post('user/forgetPassword', body)
     .then(function (response: any) {
@@ -36,8 +34,7 @@ const forgetPasswordApi = async (params: any) => {
     });
 };
 
-const resetPasswordApi = async (params: any) => {
-  const {body} = params;
+const resetPasswordApi = async (body: any) => {
   return appService
     .post('user/resetPassword', body)
     .then(function (response: any) {

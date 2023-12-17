@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     zIndex: 10000,
   },
   content: {
-    backgroundColor: Color.NEUTRAL_LINE,
+    backgroundColor: Color.NEUTRAL_BACKGROUND,
     borderRadius: 12,
     padding: 8,
     bottom: 50,

@@ -29,6 +29,8 @@ export const Color = {
   WARNING_FOCUSED: 'rgb(246, 213, 183)',
   WARNING_PRESSED: 'rgb(204, 106, 14)',
   WARNING_LINE: 'rgb(254, 193, 136)',
+  WHITE: '#FFFFFF',
+  BLACK: '#1B1C1F',
 };
 
 export type ColorOptions = keyof typeof Color;
