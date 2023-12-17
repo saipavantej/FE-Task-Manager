@@ -32,12 +32,16 @@ const Welcome = ({navigation}: Props) => {
         <Spacer size={scaleHeight(68)} />
         <Image source={assets.images.welcome} style={styles.banner} />
         <Spacer direction="vertical" size={scaleHeight(26)} />
-        <AppButton name="Login" onPress={() => navigation.navigate('Login')} />
+        <AppButton
+          name="Sign In"
+          onPress={() => navigation.navigate('Login')}
+        />
         <Spacer direction="vertical" size={scaleHeight(26)} />
         <AppButton
           name="Sign Up"
           onPress={() => navigation.navigate('SignUp')}
         />
+        <Spacer size={scaleHeight(20)} />
       </ScrollView>
     </PageView>
   );
