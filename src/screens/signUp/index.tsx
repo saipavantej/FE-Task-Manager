@@ -34,7 +34,7 @@ const SignUp = ({navigation}: Props) => {
   };
 
   const signUpValidation = Yup.object().shape({
-    name: Yup.string().required('Full cannot be empty'),
+    name: Yup.string().required('Name cannot be empty'),
     email: Yup.string()
       .email('Please enter a valid email address')
       .required('Email Address cannot be empty'),
@@ -156,7 +156,11 @@ const SignUp = ({navigation}: Props) => {
                   type="confirmPassword"
                 />
                 <Spacer direction="vertical" size={scaleHeight(30)} />
-                <AppButton name="Sign Up" onPress={() => handleSubmit()} />
+                <AppButton
+                  name="Sign Up"
+                  onPress={() => handleSubmit()}
+                  disable={status === 'loading'}
+                />
                 <Spacer direction="vertical" size={scaleHeight(20)} />
                 <View
                   style={{

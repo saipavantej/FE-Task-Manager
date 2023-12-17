@@ -116,7 +116,11 @@ const Login = ({navigation}: Props) => {
                   </TouchableOpacity>
                 </View>
                 <Spacer direction="vertical" size={scaleHeight(50)} />
-                <AppButton name="Sign In" onPress={() => handleSubmit()} />
+                <AppButton
+                  name="Sign In"
+                  onPress={() => handleSubmit()}
+                  disable={status === 'loading'}
+                />
                 <Spacer direction="vertical" size={scaleHeight(20)} />
                 <View
                   style={{

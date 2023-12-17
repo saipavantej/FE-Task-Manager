@@ -80,7 +80,7 @@ const AppTextInput = forwardRef((props: Props, ref) => {
   };
 
   return (
-    <View style={{marginBottom: scaleHeight(10)}}>
+    <View style={{marginBottom: scaleHeight(24)}}>
       <View>
         <Text style={styles.labelStyle}>{label}</Text>
         <Spacer size={scaleHeight(12)} />
@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
   labelStyle: {
     fontSize: scaleFont(16),
     ...CUSTOM_FONT.Medium,
+    color: Color.BLACK,
   },
   inputStyle: {
     borderWidth: 1,

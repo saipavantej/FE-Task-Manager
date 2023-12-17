@@ -45,4 +45,23 @@ const resetPasswordApi = async (body: any) => {
       throw error;
     });
 };
-export {signUpApi, loginApi, forgetPasswordApi, resetPasswordApi};
+
+const editPasswordApi = async (body: any) => {
+  return appService
+    .put('user/editProfile', body)
+    .then(function (response: any) {
+      return response.data;
+    })
+    .catch(function (error) {
+      console.log(error);
+      throw error;
+    });
+};
+
+export {
+  signUpApi,
+  loginApi,
+  forgetPasswordApi,
+  resetPasswordApi,
+  editPasswordApi,
+};
