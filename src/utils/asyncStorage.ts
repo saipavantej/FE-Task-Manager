@@ -9,6 +9,18 @@ const setItem = async (key: string, value: string) => {
   }
 };
 
+const setMultipleItems = async (
+  items: [string, string][],
+): Promise<boolean> => {
+  try {
+    await AsyncStorage.multiSet(items);
+    return true;
+  } catch (error) {
+    console.error('Error setting multiple items in AsyncStorage:', error);
+    return false;
+  }
+};
+
 const getItem = async (key: string) => {
   try {
     const result = await AsyncStorage.getItem(key);
@@ -49,4 +61,12 @@ const removeAllItems = async () => {
     return false;
   }
 };
-export {setItem, getItem, getAllItems, removeItem, removeAllItems};
+
+export {
+  setItem,
+  getItem,
+  getAllItems,
+  removeItem,
+  removeAllItems,
+  setMultipleItems,
+};
