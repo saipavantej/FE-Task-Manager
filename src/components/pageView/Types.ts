@@ -11,18 +11,17 @@ const withHeader = {
     } as StyleProp<ViewStyle>),
 };
 
-const withOutHeader = {
+const withOutMargin = {
   container: (bgColor: ColorOptions) =>
     ({
       flex: 1,
-      paddingHorizontal: scaleWidth(24),
       backgroundColor: getColor(bgColor),
     } as StyleProp<ViewStyle>),
 };
 
 const PageViewType = {
   withHeader: {...withHeader},
-  withOutHeader: {...withOutHeader},
+  withOutMargin: {...withOutMargin},
 };
 
 export {PageViewType};

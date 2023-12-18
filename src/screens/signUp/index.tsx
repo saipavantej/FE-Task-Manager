@@ -65,7 +65,7 @@ const SignUp = ({navigation}: Props) => {
   }, []);
 
   return (
-    <PageView backgroundColor="WHITE" type={'withOutHeader'} safeAreaView>
+    <PageView backgroundColor="WHITE" type={'withHeader'} safeAreaView>
       <KeyboardAwareScrollView
         showsVerticalScrollIndicator={false}
         bounces={false}

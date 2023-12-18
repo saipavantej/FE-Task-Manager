@@ -18,7 +18,7 @@ type Props = {};
 const BackButton = (_Props: Props) => {
   const navigation = useNavigation();
   return (
-    <View>
+    <View style={{paddingHorizontal: scaleWidth(24)}}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -28,8 +28,7 @@ const BackButton = (_Props: Props) => {
             style={styles.pageHeaderIcons}
           />
         </TouchableOpacity>
-        <Spacer direction="horizontal" size={scaleWidth(5)} />
-        <Text style={styles.text}>Back</Text>
+        <Spacer direction="horizontal" size={scaleWidth(10)} />
       </View>
       <Spacer size={scaleHeight(50)} />
     </View>
@@ -44,12 +43,14 @@ const styles = StyleSheet.create({
   },
   imageWrapper: {
     padding: 2,
+    // backgroundColor: Color.BRAND_PRIMARY_BACKGROUND,
+    // borderRadius: 999,
   },
   pageHeaderIcons: {
     width: scaleImage(30),
     height: scaleImage(30),
-    resizeMode: 'contain',
-    tintColor: Color.BRAND_PRIMARY_DEFAULT,
+    resizeMode: 'cover',
+    tintColor: Color.BLACK,
   },
   text: {
     ...CUSTOM_FONT.SemiBold,

@@ -17,7 +17,7 @@ const createUserTable = async () => {
       );`,
       [],
       () => {
-        console.log('Users table created successfully');
+        console.log('users table created successfully');
       },
       error => {
         console.error('Error creating users table:', error);
@@ -39,7 +39,7 @@ const createTasksTable = async () => {
         task_title TEXT NOT NULL,
         task_Description TEXT NOT NULL,
         task_due_date TEXT NOT NULL,
-        task_status TEXT,
+        task_status TEXT NOT NULL DEFAULT 'inProgress',
         FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
       );`,
       [],

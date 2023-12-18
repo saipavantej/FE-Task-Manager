@@ -7,13 +7,14 @@ import * as Yup from 'yup';
 import AppTextInput from '@components/appTextInput/AppTextInput';
 import {Formik} from 'formik';
 import {Spacer} from '@components/spacer/Spacer';
-import {scaleHeight} from '@utils/scaleDimension';
+import {scaleHeight, scaleWidth} from '@utils/scaleDimension';
 import AuthBanner from '@components/authBanner/AuthBanner';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import PageView from '@components/pageView';
 import {Color} from '@constants/colors';
 import AppButton from '@components/appButton/AppButton';
 import BackButton from '@components/appButton/BackButton';
+import { View } from 'react-native';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'ForgetPassword'>;
 
@@ -40,7 +41,7 @@ const ForgetPassword = (_props: Props) => {
   };
 
   return (
-    <PageView backgroundColor="WHITE" type={'withOutHeader'} safeAreaView>
+    <PageView backgroundColor="WHITE" type={'withOutMargin'} safeAreaView>
       <BackButton />
       <KeyboardAwareScrollView
         showsVerticalScrollIndicator={false}
@@ -67,7 +68,7 @@ const ForgetPassword = (_props: Props) => {
             touched,
           }) => {
             return (
-              <>
+              <View style={{paddingHorizontal: scaleWidth(24)}}>
                 <AppTextInput
                   ref={email}
                   placeholder="name@example.com"
@@ -91,7 +92,7 @@ const ForgetPassword = (_props: Props) => {
                   disable={status === 'loading'}
                 />
                 <Spacer direction="vertical" size={scaleHeight(20)} />
-              </>
+              </View>
             );
           }}
         </Formik>

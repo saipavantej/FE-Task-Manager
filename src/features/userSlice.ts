@@ -10,8 +10,16 @@ import {showErrorToast, showSuccessToast} from '@components/Toast/action';
 import {setMultipleItems} from '@utils/asyncStorage';
 import {addUser} from '../database/query';
 
+export type user = {
+  user_id: string;
+  name: string;
+  user_picture: string;
+  email_id: string;
+  token?: string;
+};
+
 export type userState = {
-  data: {};
+  data: user;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 };
@@ -75,22 +83,21 @@ const transformApiResponse = (
           user_name: apiResponse.response.username,
           user_picture: apiResponse.response.picture,
           email_id: apiResponse.response.email_id,
-          successCallback: e => {
+          successCallback: _e => {
             replace('MainStack');
-            showSuccessToast(e);
           },
           errorCallback: e => {
             showErrorToast(e);
           },
         });
-        return {
-          id: apiResponse.response.user_id,
-          name: apiResponse.response.username,
-          picture: apiResponse.response.picture,
-          emailId: apiResponse.response.email_id,
-          token: apiResponse.token,
-        };
       });
+      return {
+        user_id: apiResponse.response.user_id,
+        name: apiResponse.response.username,
+        user_picture: apiResponse.response.picture,
+        email_id: apiResponse.response.email_id,
+        token: apiResponse.token,
+      };
   }
 };
 
@@ -143,7 +150,12 @@ export const editPasswordAsync = createAsyncThunk(
 );
 
 const initialState: userState = {
-  data: {},
+  data: {
+    user_id: '',
+    name: '',
+    user_picture: '',
+    email_id: '',
+  },
   status: 'idle',
   error: null,
 };

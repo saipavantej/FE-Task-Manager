@@ -11,9 +11,10 @@ import {Color} from '@constants/colors';
 import {Spacer} from '@components/spacer/Spacer';
 import {Formik} from 'formik';
 import AuthBanner from '@components/authBanner/AuthBanner';
-import {scaleHeight} from '@utils/scaleDimension';
+import {scaleHeight, scaleWidth} from '@utils/scaleDimension';
 import AppButton from '@components/appButton/AppButton';
 import BackButton from '@components/appButton/BackButton';
+import {View} from 'react-native';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'ResetPassword'>;
 
@@ -54,7 +55,7 @@ const ResetPassword = ({route}: Props) => {
   };
 
   return (
-    <PageView backgroundColor="WHITE" type={'withOutHeader'} safeAreaView>
+    <PageView backgroundColor="WHITE" type={'withOutMargin'} safeAreaView>
       <BackButton />
       <KeyboardAwareScrollView
         showsVerticalScrollIndicator={false}
@@ -81,7 +82,7 @@ const ResetPassword = ({route}: Props) => {
             touched,
           }) => {
             return (
-              <>
+              <View style={{paddingHorizontal: scaleWidth(24)}}>
                 <AppTextInput
                   ref={otp}
                   placeholder="Enter the OTP"
@@ -136,7 +137,7 @@ const ResetPassword = ({route}: Props) => {
                   disable={status === 'loading'}
                 />
                 <Spacer size={scaleHeight(20)} />
-              </>
+              </View>
             );
           }}
         </Formik>

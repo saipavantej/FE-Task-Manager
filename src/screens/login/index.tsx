@@ -13,7 +13,7 @@ import {Color} from '@constants/colors';
 import PageView from '@components/pageView';
 import AppButton from '@components/appButton/AppButton';
 import {CUSTOM_FONT} from '@constants/fonts';
-import {scaleFont, scaleHeight} from '@utils/scaleDimension';
+import {scaleFont, scaleHeight, scaleWidth} from '@utils/scaleDimension';
 import AuthBanner from '@components/authBanner/AuthBanner';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
@@ -50,7 +50,7 @@ const Login = ({navigation}: Props) => {
   }, []);
 
   return (
-    <PageView backgroundColor="WHITE" type={'withOutHeader'} safeAreaView>
+    <PageView backgroundColor="WHITE" type={'withOutMargin'} safeAreaView>
       <KeyboardAwareScrollView
         showsVerticalScrollIndicator={false}
         bounces={false}
@@ -76,7 +76,7 @@ const Login = ({navigation}: Props) => {
             touched,
           }) => {
             return (
-              <>
+              <View style={{paddingHorizontal: scaleWidth(24)}}>
                 <AppTextInput
                   ref={email}
                   placeholder="name@example.com"
@@ -135,7 +135,7 @@ const Login = ({navigation}: Props) => {
                   </TouchableOpacity>
                 </View>
                 <Spacer size={scaleHeight(20)} />
-              </>
+              </View>
             );
           }}
         </Formik>

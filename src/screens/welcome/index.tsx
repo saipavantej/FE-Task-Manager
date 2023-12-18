@@ -14,7 +14,7 @@ type Props = NativeStackScreenProps<AuthStackParamList, 'Welcome'>;
 
 const Welcome = ({navigation}: Props) => {
   return (
-    <PageView backgroundColor="WHITE" type={'withOutHeader'} safeAreaView>
+    <PageView backgroundColor="WHITE" type={'withHeader'} safeAreaView>
       <ScrollView
         bounces={false}
         showsVerticalScrollIndicator={false}
