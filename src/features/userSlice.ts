@@ -49,6 +49,7 @@ type editProfileBody = {
   user_name?: string;
   picture?: string;
 };
+
 export const userLoginAsync = createAsyncThunk(
   'user/login',
   async (body: loginBody) => {
@@ -163,7 +164,11 @@ const initialState: userState = {
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setUserIdFromAsyncStore: (state, action) => {
+      state.data.user_id = action.payload;
+    },
+  },
   extraReducers: builder => {
     // Login
     builder
@@ -309,6 +314,6 @@ const userSlice = createSlice({
       });
   },
 });
-
+export const {setUserIdFromAsyncStore} = userSlice.actions;
 export const userReducer = userSlice.reducer;
 export default userSlice;
