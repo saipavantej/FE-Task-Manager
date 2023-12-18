@@ -67,13 +67,13 @@ const transformApiResponse = (
       };
     default:
       setItem('token', apiResponse.token).then(() => {
-        replace('MainStack');
         addUser({
-          user_id: apiResponse.esponse.user_id,
+          user_id: apiResponse.response.user_id,
           user_name: apiResponse.response.username,
           user_picture: apiResponse.response.picture,
           email_id: apiResponse.response.email_id,
           successCallback: e => {
+            replace('MainStack');
             showSuccessToast(e);
           },
           errorCallback: e => {
