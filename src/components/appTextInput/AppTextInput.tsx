@@ -24,6 +24,7 @@ import {
 type Props = {
   label: string;
   textInputStyle?: ViewStyle;
+  multilineStyle?: ViewStyle;
   placeholder: string;
   autoCapitalize: 'none' | 'sentences' | 'words' | 'characters' | undefined;
   placeholderTextColor?: string;
@@ -36,15 +37,18 @@ type Props = {
   touched: any;
   loading: boolean;
   type?: 'default' | 'password' | 'confirmPassword';
+  multiline?: boolean;
 };
 
 const AppTextInput = forwardRef((props: Props, ref) => {
   const {
     label,
     textInputStyle,
+    multilineStyle,
     placeholder,
     autoCapitalize = 'none',
     placeholderTextColor,
+    multiline = false,
     onChangeText,
     onBlur,
     value,
@@ -115,19 +119,20 @@ const AppTextInput = forwardRef((props: Props, ref) => {
                 ? true
                 : false
             }
-            style={textInputStyle}
+            style={multiline ? multilineStyle : textInputStyle}
             autoCapitalize={autoCapitalize}
             placeholderTextColor={placeholderTextColor}
             placeholder={placeholder}
             onChangeText={onChangeText}
             onBlur={onBlur}
             value={value}
+            multiline={multiline}
             onSubmitEditing={onSubmitEditing}
             keyboardType={keyboardType ? keyboardType : 'default'}
             returnKeyType={onSubmitEditing ? 'next' : 'done'}
             blurOnSubmit={onSubmitEditing ? false : true}
             editable={!loading}
-            selectTextOnFocus={false}
+            selectTextOnFocus={multiline ? false : true}
           />
         </View>
         {type === 'password' && (

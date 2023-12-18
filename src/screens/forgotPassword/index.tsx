@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 import {AuthStackParamList} from '@constants/routes';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useAppDispatch, useAppSelector} from '@hooks/index';
-import {forgetPasswordAsync} from '../../features/user-slice';
+import {forgetPasswordAsync} from '../../features/userSlice';
 import * as Yup from 'yup';
 import AppTextInput from '@components/appTextInput/AppTextInput';
 import {Formik} from 'formik';

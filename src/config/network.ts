@@ -14,7 +14,7 @@ const errorHandler = (error: any) => {
 };
 
 const appService = axios.create({
-  baseURL: 'http://localhost:3000/api/',
+  baseURL: 'https://onemtucia.onrender.com/api/',
   timeout: 50000,
 });
 

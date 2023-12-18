@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import {AuthStackParamList} from '@constants/routes';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {resetPasswordAsync} from '../../features/user-slice';
+import {resetPasswordAsync} from '../../features/userSlice';
 import AppTextInput from '@components/appTextInput/AppTextInput';
 import {useAppDispatch, useAppSelector} from '@hooks/index';
 import * as Yup from 'yup';

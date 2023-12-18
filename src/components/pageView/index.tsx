@@ -95,7 +95,7 @@ const PageView = ({
               style={styles.pageHeaderIcons}
             />
           </TouchableOpacity>
-          <Spacer direction="horizontal" size={scaleWidth(30)} />
+          <Spacer direction="horizontal" size={scaleWidth(10)} />
           <Text style={styles.pageHeaderText}>{headerText}</Text>
         </View>
       )}
@@ -116,8 +116,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   pageHeaderIcons: {
-    width: scaleImage(24),
-    height: scaleImage(24),
+    width: scaleImage(30),
+    height: scaleImage(30),
     resizeMode: 'contain',
     tintColor: Color.NEUTRAL_PRIMARY,
   },

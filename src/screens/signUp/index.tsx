@@ -9,7 +9,7 @@ import AppTextInput from '@components/appTextInput/AppTextInput';
 import {Color} from '@constants/colors';
 import * as Yup from 'yup';
 import {useAppDispatch, useAppSelector} from '@hooks/index';
-import {userSignUpAsync} from '../../features/user-slice';
+import {userSignUpAsync} from '../../features/userSlice';
 import PageView from '@components/pageView';
 import AuthBanner from '@components/authBanner/AuthBanner';
 import {scaleFont, scaleHeight} from '@utils/scaleDimension';

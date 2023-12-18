@@ -3,7 +3,7 @@ import React, {useEffect, useRef} from 'react';
 import {AuthStackParamList} from '@constants/routes';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useAppDispatch, useAppSelector} from '@hooks/index';
-import {userLoginAsync} from '../../features/user-slice';
+import {userLoginAsync} from '../../features/userSlice';
 import AppTextInput from '@components/appTextInput/AppTextInput';
 import {Spacer} from '@components/spacer/Spacer';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
