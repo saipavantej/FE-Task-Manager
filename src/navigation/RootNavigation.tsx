@@ -8,20 +8,26 @@ import MainStack from './MainStack';
 import {navigationRef, replace} from './NavService';
 import {getItem} from '@utils/asyncStorage';
 import {createTasksTable, createUserTable} from '../database/table';
+import {setUserIdFromAsyncStore} from '../features/userSlice';
+import {useAppDispatch} from '@hooks/index';
 
 const RootNavigation = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
+  const dispatch = useAppDispatch();
 
-  const databaseInit = () => {
-    createUserTable();
-    createTasksTable();
+  const databaseInit = async () => {
+    await createUserTable();
+    await createTasksTable();
   };
 
   const init = async () => {
-    getItem('token').then(e =>
+    await getItem('userId').then(user_id =>
+      dispatch(setUserIdFromAsyncStore(user_id)),
+    );
+    await getItem('token').then(e =>
       e ? replace('MainStack') : replace('AuthStack'),
     );
-    databaseInit();
+    await databaseInit();
   };
 
   const onNavigationReady = () => {
