@@ -33,22 +33,21 @@ const createTasksTable = async () => {
   });
   db.transaction(tx => {
     tx.executeSql(
-      `CREATE TABLE IF NOT EXISTS downloads (
-        task_id INTEGER NOT NULL PRIMARY KEY,
-        user_id TEXT NOT NULL,
+      `CREATE TABLE IF NOT EXISTS tasks (
+        user_id TEXT,
+        task_id INTEGER PRIMARY KEY AUTOINCREMENT,
         task_title TEXT NOT NULL,
         task_Description TEXT NOT NULL,
         task_due_date TEXT NOT NULL,
-        english_subtitle_url TEXT,
         task_status TEXT,
         FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
       );`,
       [],
       () => {
-        console.log('Downloads table created successfully');
+        console.log('tasks table created successfully');
       },
       error => {
-        console.error('Error creating downloads table:', error);
+        console.error('Error creating tasks table:', error);
       },
     );
   });
