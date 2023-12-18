@@ -31,9 +31,9 @@ export const Color = {
   WARNING_LINE: 'rgb(254, 193, 136)',
   WHITE: '#FFFFFF',
   BLACK: '#1B1C1F',
-  TASK_LOW: '#F5D155',
-  TASK_MEDIUM: '#F09643',
-  TASK_HIGH: '#E86C62',
+  TODO_TASK: '#F5D155',
+  IN_PROGRESS_TASK: '#F09643',
+  COMPLETED_TASK: '#E86C62',
 };
 
 export type ColorOptions = keyof typeof Color;
