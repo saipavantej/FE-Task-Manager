@@ -8,6 +8,7 @@ import {
 import {navigate, replace} from '@navigation/NavService';
 import {showErrorToast, showSuccessToast} from '@components/Toast/action';
 import {setItem} from '@utils/asyncStorage';
+import {addUser} from '../database/query';
 
 export type userState = {
   data: {};
@@ -67,6 +68,18 @@ const transformApiResponse = (
     default:
       setItem('token', apiResponse.token).then(() => {
         replace('MainStack');
+        addUser({
+          user_id: apiResponse.esponse.user_id,
+          user_name: apiResponse.response.username,
+          user_picture: apiResponse.response.picture,
+          email_id: apiResponse.response.email_id,
+          successCallback: e => {
+            showSuccessToast(e);
+          },
+          errorCallback: e => {
+            showErrorToast(e);
+          },
+        });
         return {
           id: apiResponse.response.user_id,
           name: apiResponse.response.username,

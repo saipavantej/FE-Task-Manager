@@ -7,14 +7,21 @@ import AuthStack from './AuthStack';
 import MainStack from './MainStack';
 import {navigationRef, replace} from './NavService';
 import {getItem} from '@utils/asyncStorage';
+import {createTasksTable, createUserTable} from '../database/table';
 
 const RootNavigation = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
+
+  const databaseInit = () => {
+    createUserTable();
+    createTasksTable();
+  };
 
   const init = async () => {
     getItem('token').then(e =>
       e ? replace('MainStack') : replace('AuthStack'),
     );
+    databaseInit();
   };
 
   const onNavigationReady = () => {

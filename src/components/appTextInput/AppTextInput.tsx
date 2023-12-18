@@ -119,7 +119,11 @@ const AppTextInput = forwardRef((props: Props, ref) => {
                 ? true
                 : false
             }
-            style={multiline ? multilineStyle : textInputStyle}
+            style={
+              multiline
+                ? [multilineStyle, {color: Color.BLACK}]
+                : [textInputStyle, {color: Color.BLACK}]
+            }
             autoCapitalize={autoCapitalize}
             placeholderTextColor={placeholderTextColor}
             placeholder={placeholder}

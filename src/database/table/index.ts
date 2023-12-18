@@ -3,16 +3,18 @@ SQLite.enablePromise(true);
 
 const createUserTable = async () => {
   const db = await SQLite.openDatabase({
-    name: 'BAM_Kids.db',
+    name: 'Task_Manager.db',
     location: 'default',
   });
+
   db.transaction(tx => {
     tx.executeSql(
       `CREATE TABLE IF NOT EXISTS users (
-      user_id TEXT NOT NULL PRIMARY KEY,
-      name user_name,
-      user_picture TEXT
-    );`,
+        user_id TEXT NOT NULL PRIMARY KEY,
+        user_name TEXT,
+        user_picture TEXT,
+        email_id TEXT
+      );`,
       [],
       () => {
         console.log('Users table created successfully');
@@ -24,9 +26,9 @@ const createUserTable = async () => {
   });
 };
 
-const createDownloadsTable = async () => {
+const createTasksTable = async () => {
   const db = await SQLite.openDatabase({
-    name: 'BAM_Kids.db',
+    name: 'Task_Manager.db',
     location: 'default',
   });
   db.transaction(tx => {
@@ -52,4 +54,4 @@ const createDownloadsTable = async () => {
   });
 };
 
-export {createUserTable, createDownloadsTable};
+export {createUserTable, createTasksTable};

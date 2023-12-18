@@ -25,6 +25,7 @@ type addUserParam = {
   user_id: string;
   user_name: string;
   user_picture: string;
+  email_id: string;
   successCallback: (e: string) => void;
   errorCallback: (error: any) => void;
 };
@@ -39,6 +40,7 @@ const addUser = async ({
   user_id,
   user_name,
   user_picture,
+  email_id,
   successCallback,
   errorCallback,
 }: addUserParam): Promise<void> => {
@@ -46,33 +48,34 @@ const addUser = async ({
     name: 'Task_Manager.db',
     location: 'default',
   });
-
+  console.log('dsfsfsfsdf');
   db.transaction(tx => {
     tx.executeSql(
       'SELECT user_id FROM users WHERE user_id = ?',
       [user_id],
       (_, result) => {
         if (result.rows.length === 0) {
-          // User with user_id doesn't exist, so insert the new record
           db.transaction(tx => {
             tx.executeSql(
-              'INSERT INTO users (user_id, user_name, user_picture) VALUES (?, ?, ?);',
-              [user_id, user_name, user_picture],
+              'INSERT INTO users (user_id, user_name, user_picture, email_id ) VALUES (?, ?, ?, ?);',
+              [user_id, user_name, user_picture, email_id],
               () => {
-                successCallback(`${user_id} user added succesfully`);
+                successCallback(
+                  `${user_id} user added to local storage succesfully`,
+                );
               },
               error => {
-                errorCallback(error);
+                errorCallback(error.message);
               },
             );
           });
         } else {
           // User with user_id already exists
-          successCallback(`${user_id} user already exist`); // You can choose to handle this case differently
+          successCallback(`${user_id} user already exist in local storage`);
         }
       },
       error => {
-        errorCallback(error);
+        errorCallback(error.message);
       },
     );
   });
