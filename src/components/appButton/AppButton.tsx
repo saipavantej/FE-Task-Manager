@@ -8,13 +8,14 @@ type Props = {
   name: string;
   disable?: boolean;
   onPress: Function;
+  width?: number;
 };
 
 const AppButton = (props: Props) => {
-  const {name, onPress, disable = false} = props;
+  const {name, onPress, disable = false, width = 327} = props;
   return (
     <TouchableOpacity
-      style={styles.button}
+      style={[styles.button, {minWidth: scaleWidth(width)}]}
       disabled={disable}
       onPress={() => onPress && onPress()}>
       <Text style={styles.text}>{name}</Text>
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: scaleHeight(18),
     paddingHorizontal: scaleWidth(18),
-    minWidth: scaleWidth(327),
+
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 16,

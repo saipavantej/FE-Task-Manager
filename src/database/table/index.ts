@@ -39,7 +39,7 @@ const createTasksTable = async () => {
         task_title TEXT NOT NULL,
         task_Description TEXT NOT NULL,
         task_due_date TEXT NOT NULL,
-        task_status TEXT NOT NULL DEFAULT 'inProgress',
+        task_status TEXT NOT NULL DEFAULT 'In Progress',
         FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
       );`,
       [],

@@ -6,7 +6,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import React from 'react';
+import React, {memo, useCallback} from 'react';
 import {scaleWidth} from '@utils/scaleDimension';
 import {Color} from '@constants/colors';
 import {assets} from '@constants/images';
@@ -15,8 +15,8 @@ import {Spacer} from '@components/spacer/Spacer';
 import {formatDate, formatTime} from '@utils/index';
 
 type Props = {
-  id: string;
-  priority: 'low' | 'medium' | 'high';
+  id: number;
+  status: 'To Do' | 'In Progress' | 'Done';
   title: string;
   description: string;
   time: string;
@@ -24,31 +24,45 @@ type Props = {
 };
 
 const TaskCard = (props: Props) => {
-  const {id, priority, title, description, time, openMenu} = props;
+  const {id, title, description, time, openMenu, status} = props;
   const getColorByPriority = (): ViewStyle => {
-    switch (priority) {
-      case 'high':
+    switch (status) {
+      case 'In Progress':
         return {
-          backgroundColor: Color.TASK_HIGH,
+          backgroundColor: Color.IN_PROGRESS_TASK,
         };
-      case 'medium':
+      case 'Done':
         return {
-          backgroundColor: Color.TASK_MEDIUM,
+          backgroundColor: Color.COMPLETED_TASK,
         };
       default:
         return {
-          backgroundColor: Color.TASK_LOW,
+          backgroundColor: Color.TODO_TASK,
         };
     }
   };
+
+  const handleButtonClick = useCallback(
+    (data: number) => {
+      openMenu(data);
+    },
+    [openMenu],
+  );
+
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() =>
+        console.log(id, title, description, time, openMenu, status)
+      }>
       <View style={[styles.priority, getColorByPriority()]}>
         <Image
           source={assets.icons.flag}
           style={{resizeMode: 'contain', height: 20, width: 20}}
         />
-        <TouchableOpacity style={{padding: 5}} onPress={() => openMenu(id)}>
+        <TouchableOpacity
+          style={{padding: 5}}
+          onPress={() => handleButtonClick(id)}>
           <Image
             source={assets.icons.menu}
             style={{resizeMode: 'contain', height: 24, width: 24}}
@@ -73,11 +87,11 @@ const TaskCard = (props: Props) => {
           <Text style={styles.timeText}>{formatDate(time)}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
-export default TaskCard;
+export default memo(TaskCard);
 
 const styles = StyleSheet.create({
   container: {

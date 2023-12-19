@@ -86,7 +86,11 @@ const PageView = ({
         backgroundColor={'transparent'}
       />
       {showHeader && (
-        <View style={styles.pageHeaderContainer}>
+        <View
+          style={[
+            styles.pageHeaderContainer,
+            {marginHorizontal: scaleWidth(type !== 'withHeader' ? 24 : 0)},
+          ]}>
           <View style={{position: 'absolute', left: 0}}>
             <TouchableOpacity
               onPress={() => navigation.goBack()}
