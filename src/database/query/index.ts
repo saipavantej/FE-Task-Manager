@@ -11,7 +11,6 @@ type task = {
   task_status: string;
 };
 
-
 type addUserParam = {
   user_id: string;
   user_name: string;
@@ -39,7 +38,6 @@ const addUser = async ({
     name: 'Task_Manager.db',
     location: 'default',
   });
-  console.log('dsfsfsfsdf');
   db.transaction(tx => {
     tx.executeSql(
       'SELECT user_id FROM users WHERE user_id = ?',
@@ -56,7 +54,7 @@ const addUser = async ({
                 );
               },
               error => {
-                errorCallback(error.message);
+                errorCallback(error);
               },
             );
           });
@@ -66,7 +64,7 @@ const addUser = async ({
         }
       },
       error => {
-        errorCallback(error.message);
+        errorCallback(error);
       },
     );
   });
@@ -75,7 +73,6 @@ const addUser = async ({
 const addTask = async (
   newTask: Omit<Task, 'task_id'>,
 ): Promise<ApiCreateResponse> => {
-  console.log('start', newTask);
   const db = await SQLite.openDatabase({
     name: 'Task_Manager.db',
     location: 'default',
@@ -98,7 +95,6 @@ const addTask = async (
             task_id: result.insertId,
             ...newTask,
           };
-          console.log('gfhfhf', insertedTask);
           resolve({
             success: true,
             message: 'Task created successfully',
@@ -108,7 +104,7 @@ const addTask = async (
         error => {
           reject({
             success: false,
-            message: error.message,
+            message: error,
             data: null,
           });
         },
@@ -169,66 +165,95 @@ const fetchTasksForUser = async ({
   }
 };
 
-const fetchTasksById = async (task_id: number): Promise<any> => {
-  const db = await SQLite.openDatabase({
-    name: 'Tasks_manager.db',
-    location: 'default',
-  });
-
-  try {
-    const [results] = await db.executeSql(
-      'SELECT * FROM tasks WHERE task_id = ?',
-      [task_id],
-    );
-    if (results.rows.length > 0) {
-      return results.rows.item(0);
-    } else {
-      return {};
-    }
-  } catch (error) {
-    throw error;
-  }
-};
-
-const removeTaskById = async (task_id: number): Promise<void> => {
-  const db = await SQLite.openDatabase({
-    name: 'Task_Manager.db',
-    location: 'default',
-  });
-  db.transaction(tx => {
-    tx.executeSql(
-      'DELETE FROM tasks WHERE task_id = ?;',
-      [task_id],
-      () => {
-        console.log(`download_id: ${task_id} removed succesfully`);
+const fetchTaskDetails = (task_id: number): Promise<void> => {
+  return new Promise(async (resolve, reject) => {
+    const db = await SQLite.openDatabase({
+      name: 'Task_Manager.db',
+      location: 'default',
+    });
+    console.log(task_id);
+    db.transaction(
+      tx => {
+        tx.executeSql(
+          'SELECT * FROM tasks WHERE task_id = ?',
+          [task_id],
+          (_, result) => {
+            if (result.rows.length > 0) {
+              const taskDetails = result.rows.item(0);
+              resolve(taskDetails);
+            } else {
+              reject('no data found');
+            }
+          },
+          error => {
+            reject(error);
+          },
+        );
       },
       error => {
-        console.log(error);
-        throw error;
+        reject(error.message);
       },
     );
   });
 };
 
-const deleteUserByUserId = async (
-  user_id: string,
-  successCallback: () => void,
-  errorCallback: (error: any) => void,
+const updateTaskDetails = async (
+  taskId: number,
+  updatedTask: Partial<Omit<Task, 'task_id'>>,
 ): Promise<void> => {
   const db = await SQLite.openDatabase({
     name: 'Task_Manager.db',
     location: 'default',
   });
-  db.executeSql('PRAGMA foreign_keys = ON');
-  db.transaction(tx => {
-    tx.executeSql(
-      'DELETE FROM users WHERE user_id = ?;',
-      [user_id],
-      () => {
-        successCallback();
+
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'UPDATE tasks SET task_title = ?, task_Description = ?, task_due_date = ?, task_status = ? WHERE task_id = ?;',
+        [
+          updatedTask.task_title,
+          updatedTask.task_Description,
+          updatedTask.task_due_date,
+          updatedTask.task_status,
+          taskId,
+        ],
+        (_, result) => {
+          if (result.rowsAffected > 0) {
+            resolve();
+          } else {
+            reject('Task not found');
+          }
+        },
+        error => {
+          reject(error);
+        },
+      );
+    });
+  });
+};
+
+const deleteTask = (task_id: number): Promise<void> => {
+  return new Promise(async (resolve, reject) => {
+    const db = await SQLite.openDatabase({
+      name: 'Task_Manager.db',
+      location: 'default',
+    });
+
+    db.transaction(
+      tx => {
+        tx.executeSql(
+          'DELETE FROM tasks WHERE task_id = ?;',
+          [task_id],
+          (_, _result) => {
+            resolve();
+          },
+          error => {
+            reject(error);
+          },
+        );
       },
       error => {
-        errorCallback(error);
+        reject(error.message);
       },
     );
   });
@@ -238,7 +263,7 @@ export {
   addTask,
   addUser,
   fetchTasksForUser,
-  fetchTasksById,
-  removeTaskById,
-  deleteUserByUserId,
+  fetchTaskDetails,
+  deleteTask,
+  updateTaskDetails,
 };

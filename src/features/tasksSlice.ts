@@ -1,100 +1,227 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 import {
-  fetchTasksApi,
-  deleteTaskApi,
-  updateTaskApi,
-  createTaskApi,
-} from '../services';
+  addTask,
+  deleteTask,
+  fetchTaskDetails,
+  fetchTasksForUser,
+  updateTaskDetails,
+} from '../database/query';
+import {showErrorToast} from '@components/Toast/action';
 
-export const fetchTasks = createAsyncThunk(
+export type Task = {
+  task_id: number;
+  user_id: string;
+  task_title: string;
+  task_Description: string;
+  task_due_date: string;
+  task_status: string;
+};
+
+type TasksState = {
+  tasks: Task[];
+  taskData: {
+    task_title: string;
+    task_Description: string;
+    task_due_date: string;
+    task_status: string;
+  };
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
+  page_no: number;
+  total_count: number;
+  total_pages: number;
+};
+
+type ApiFetchResponse = {
+  page_no: number;
+  total_count: number;
+  total_pages: number;
+  data: Task[];
+};
+
+export type ApiCreateResponse = {
+  success: boolean;
+  message: string;
+  data: Task;
+};
+
+type FetchTasksParams = {
+  userId: string;
+  perPage: number;
+  page: number;
+};
+
+export const fetchTasksAsync = createAsyncThunk(
   'tasks/fetchTasks',
-  async ({page, perPage}: any) => {
-    try {
-      const response = await fetchTasksApi({page, perPage});
-      return response;
-    } catch (error) {
-      throw error;
-    }
+  async ({userId, perPage, page}: FetchTasksParams) => {
+    const response: ApiFetchResponse = await fetchTasksForUser({
+      userId,
+      perPage,
+      page,
+    });
+    return response;
   },
 );
 
-export const createTask = createAsyncThunk(
+export const createTaskAsync = createAsyncThunk(
   'tasks/createTask',
-  async taskData => {
+  async (newTask: Omit<Task, 'task_id'>) => {
+    const response = await addTask({
+      user_id: newTask.user_id,
+      task_title: newTask.task_title,
+      task_Description: newTask.task_Description,
+      task_due_date: newTask.task_due_date,
+      task_status: newTask.task_status,
+    });
+    console.log(response);
+    return response;
+  },
+);
+
+export const fetchTaskDetailsAsync = createAsyncThunk(
+  'tasks/fetchTaskDetails',
+  async (TaskIdOnly: Pick<Task, 'task_id'>) => {
+    const response: any = await fetchTaskDetails(TaskIdOnly.task_id);
+    console.log(response);
+    return response;
+  },
+);
+
+export const updateTaskDetailsAsync = createAsyncThunk(
+  'tasks/updateTaskDetails',
+  async ({
+    taskId,
+    updatedTask,
+  }: {
+    taskId: number;
+    updatedTask: Partial<Task>;
+  }) => {
     try {
-      const response = createTaskApi(taskData);
-      return response;
+      await updateTaskDetails(taskId, updatedTask);
+      console.log(taskId, updatedTask);
+      return {taskId, updatedTask};
     } catch (error) {
       throw error;
     }
   },
 );
 
-export const updateTask = createAsyncThunk(
-  'tasks/updateTask',
-  async ({taskId, updatedTaskData}: any) => {
-    try {
-      const response = updateTaskApi({taskId, updatedTaskData});
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  },
-);
-
-export const deleteTask = createAsyncThunk(
+export const deleteTaskAsync = createAsyncThunk(
   'tasks/deleteTask',
-  async (taskId: string) => {
-    try {
-      const response = await deleteTaskApi(taskId);
-      return response;
-    } catch (error) {
-      throw error;
-    }
+  async (taskId: number) => {
+    await deleteTask(taskId);
+    return {taskId};
   },
 );
 
-// Redux slice for tasks
-const tasksSlice = createSlice({
+const initialState: TasksState = {
+  tasks: [],
+  taskData: {
+    task_title: '',
+    task_Description: '',
+    task_due_date: '',
+    task_status: '',
+  },
+  status: 'idle',
+  error: null,
+  page_no: 1,
+  total_count: 0,
+  total_pages: 0,
+};
+
+const taskSlice = createSlice({
   name: 'tasks',
-  initialState: {entities: [], status: 'idle', error: null, pagination: {}},
-  reducers: {},
+  initialState,
+  reducers: {
+    // Add other synchronous actions if needed
+  },
   extraReducers: builder => {
     builder
-      .addCase(fetchTasks.pending, state => {
+      .addCase(fetchTasksAsync.pending, state => {
         state.status = 'loading';
       })
-      .addCase(fetchTasks.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.entities = [...state.entities, ...action.payload.response];
-        state.pagination = {
-          page_no: action.payload.page_no,
-          total_count: action.payload.total_count,
-          total_pages: action.payload.total_pages,
-        };
+      .addCase(
+        fetchTasksAsync.fulfilled,
+        (state, action: PayloadAction<ApiFetchResponse>) => {
+          state.status = 'succeeded';
+          state.tasks = state.tasks.concat(action.payload.data);
+          state.page_no = action.payload.page_no;
+          state.total_count = action.payload.total_count;
+          state.total_pages = action.payload.total_pages;
+        },
+      )
+      .addCase(fetchTasksAsync.rejected, (_state, action) => {
+        showErrorToast(action.error.message ?? '');
       })
-      .addCase(fetchTasks.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
+      .addCase(createTaskAsync.pending, state => {
+        state.status = 'loading';
       })
-      .addCase(createTask.fulfilled, (state, action) => {
-        state.entities.push(action.payload);
+      .addCase(
+        createTaskAsync.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.status = 'succeeded';
+          state.tasks = [
+            ...state.tasks,
+            {
+              task_id: action.payload.data.task_id,
+              user_id: action.payload.data.user_id,
+              task_title: action.payload.data.task_title,
+              task_Description: action.payload.data.task_Description,
+              task_due_date: action.payload.data.task_due_date,
+              task_status: action.payload.data.task_status,
+            },
+          ];
+        },
+      )
+      .addCase(createTaskAsync.rejected, (_state, action) => {
+        showErrorToast(action.error.message ?? 'Failed to create task');
       })
-      .addCase(updateTask.fulfilled, (state, action) => {
-        const index = state.entities.findIndex(
-          task => task.id === action.payload.id,
-        );
-        if (index !== -1) {
-          state.entities[index] = action.payload;
-        }
+      .addCase(
+        deleteTaskAsync.fulfilled,
+        (state, action: PayloadAction<{taskId: number}>) => {
+          state.status = 'succeeded';
+          state.tasks = state.tasks.filter(
+            task => task.task_id !== action.payload.taskId,
+          );
+        },
+      )
+      .addCase(
+        fetchTaskDetailsAsync.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.status = 'succeeded';
+          state.tasks = state.tasks.filter(
+            task => task.task_id !== action.payload.taskId,
+          );
+        },
+      )
+      .addCase(fetchTaskDetailsAsync.rejected, (_state, action) => {
+        showErrorToast(action.error.message ?? 'Failed to fetch task details');
       })
-      .addCase(deleteTask.fulfilled, (state, action) => {
-        state.entities = state.entities.filter(
-          task => task._id !== action.meta.arg,
-        );
+      .addCase(
+        updateTaskDetailsAsync.fulfilled,
+        (
+          state,
+          action: PayloadAction<{taskId: number; updatedTask: Partial<Task>}>,
+        ) => {
+          state.status = 'succeeded';
+          const {taskId, updatedTask} = action.payload;
+          const taskIndex = state.tasks.findIndex(
+            task => task.task_id === taskId,
+          );
+          if (taskIndex !== -1) {
+            state.tasks[taskIndex] = {
+              ...state.tasks[taskIndex],
+              ...updatedTask,
+            };
+          }
+          console.log('success');
+        },
+      )
+      .addCase(updateTaskDetailsAsync.rejected, (state, action) => {
+        showErrorToast(action.error.message ?? 'Update failed');
       });
   },
 });
 
-export const taskReducer = tasksSlice.reducer;
-export default tasksSlice;
+export const taskReducer = taskSlice.reducer;
+export default taskSlice;
