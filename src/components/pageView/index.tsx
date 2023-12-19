@@ -87,14 +87,16 @@ const PageView = ({
       />
       {showHeader && (
         <View style={styles.pageHeaderContainer}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.imageWrapper}>
-            <Image
-              source={assets.icons.leftArrow}
-              style={styles.pageHeaderIcons}
-            />
-          </TouchableOpacity>
+          <View style={{position: 'absolute', left: 0}}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.imageWrapper}>
+              <Image
+                source={assets.icons.leftArrow}
+                style={styles.pageHeaderIcons}
+              />
+            </TouchableOpacity>
+          </View>
           <Spacer direction="horizontal" size={scaleWidth(10)} />
           <Text style={styles.pageHeaderText}>{headerText}</Text>
         </View>
@@ -109,6 +111,7 @@ const styles = StyleSheet.create({
   pageHeaderContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   imageWrapper: {
     padding: 2,
