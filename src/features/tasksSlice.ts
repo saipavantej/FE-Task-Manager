@@ -73,7 +73,6 @@ export const createTaskAsync = createAsyncThunk(
       task_due_date: newTask.task_due_date,
       task_status: newTask.task_status,
     });
-    console.log(response);
     return response;
   },
 );
@@ -82,7 +81,6 @@ export const fetchTaskDetailsAsync = createAsyncThunk(
   'tasks/fetchTaskDetails',
   async (TaskIdOnly: Pick<Task, 'task_id'>) => {
     const response: any = await fetchTaskDetails(TaskIdOnly.task_id);
-    console.log(response);
     return response;
   },
 );
@@ -98,7 +96,6 @@ export const updateTaskDetailsAsync = createAsyncThunk(
   }) => {
     try {
       await updateTaskDetails(taskId, updatedTask);
-      console.log(taskId, updatedTask);
       return {taskId, updatedTask};
     } catch (error) {
       throw error;
@@ -189,9 +186,12 @@ const taskSlice = createSlice({
         fetchTaskDetailsAsync.fulfilled,
         (state, action: PayloadAction<any>) => {
           state.status = 'succeeded';
-          state.tasks = state.tasks.filter(
-            task => task.task_id !== action.payload.taskId,
-          );
+          state.taskData = {
+            task_Description: action.payload.task_Description,
+            task_due_date: action.payload.task_due_date,
+            task_status: action.payload.task_status,
+            task_title: action.payload.task_title,
+          };
         },
       )
       .addCase(fetchTaskDetailsAsync.rejected, (_state, action) => {
@@ -214,7 +214,6 @@ const taskSlice = createSlice({
               ...updatedTask,
             };
           }
-          console.log('success');
         },
       )
       .addCase(updateTaskDetailsAsync.rejected, (state, action) => {

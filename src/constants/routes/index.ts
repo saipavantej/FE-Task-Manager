@@ -23,7 +23,7 @@ export type BottomTabBarParamList = {
 
 export type TasksScreensParamList = {
   TasksList: undefined;
-  TaskDetails: undefined;
+  TaskDetails: {task_id: number};
   CreateTask: undefined;
 };
 

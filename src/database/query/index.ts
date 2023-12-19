@@ -171,7 +171,6 @@ const fetchTaskDetails = (task_id: number): Promise<void> => {
       name: 'Task_Manager.db',
       location: 'default',
     });
-    console.log(task_id);
     db.transaction(
       tx => {
         tx.executeSql(

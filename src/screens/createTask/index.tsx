@@ -15,7 +15,6 @@ import {scaleFont, scaleHeight, scaleWidth} from '@utils/scaleDimension';
 import {Color} from '@constants/colors';
 import {CUSTOM_FONT} from '@constants/fonts';
 import {formatDate, formatTime} from '@utils/index';
-import {Keyboard} from 'react-native';
 import {createTaskAsync} from '../../features/tasksSlice';
 import Modal from 'react-native-modal';
 
@@ -63,7 +62,7 @@ const CreateTask = ({navigation}: Props) => {
       safeAreaView
       type={'withOutMargin'}
       showHeader
-      headerText="Create Tasks">
+      headerText="Create Task">
       <Spacer size={40} />
       <KeyboardAwareScrollView
         showsVerticalScrollIndicator={true}
@@ -244,12 +243,9 @@ const CreateTask = ({navigation}: Props) => {
                   date={new Date()}
                   onConfirm={date => {
                     setOpen(false);
-                    Keyboard.dismiss();
-                    console.log(date);
                     setFieldValue('dateAndTime', date);
                   }}
                   onCancel={() => {
-                    Keyboard.dismiss();
                     setOpen(false);
                   }}
                 />

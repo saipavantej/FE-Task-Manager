@@ -50,11 +50,7 @@ const TaskCard = (props: Props) => {
   );
 
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() =>
-        console.log(id, title, description, time, openMenu, status)
-      }>
+    <View style={styles.container}>
       <View style={[styles.priority, getColorByPriority()]}>
         <Image
           source={assets.icons.flag}
@@ -87,7 +83,7 @@ const TaskCard = (props: Props) => {
           <Text style={styles.timeText}>{formatDate(time)}</Text>
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 

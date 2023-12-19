@@ -16,11 +16,7 @@ const TasksScreens = (_params: Params) => {
         initialRouteName={'TasksList'}
         screenOptions={{animation: 'ios', headerShown: false}}>
         <Stack.Screen name="TasksList" component={TasksList} />
-        <Stack.Screen
-          name="CreateTask"
-          component={CreateTask}
-          options={{presentation: 'modal'}}
-        />
+        <Stack.Screen name="CreateTask" component={CreateTask} />
         <Stack.Screen name="TaskDetails" component={TaskDetails} />
       </Stack.Navigator>
     </>

@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import React, {useEffect, useState} from 'react';
+import React, {memo, useCallback, useEffect, useState} from 'react';
 import {TasksScreensParamList} from '@constants/routes';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {assets} from '@constants/images';
@@ -17,11 +17,11 @@ import TaskCard from '@components/taskCard/TaskCard';
 import {Spacer} from '@components/spacer/Spacer';
 import {CUSTOM_FONT} from '@constants/fonts';
 import {useAppDispatch, useAppSelector} from '@hooks/index';
-import {deleteTask, fetchTasks} from '../../features/tasksSlice';
+import {deleteTaskAsync, fetchTasksAsync} from '../../features/tasksSlice';
 
 type Props = NativeStackScreenProps<TasksScreensParamList, 'TasksList'>;
 
-const emptyState = () => {
+const emptyState = memo(() => {
   return (
     <View
       style={{
@@ -39,56 +39,52 @@ const emptyState = () => {
       </Text>
     </View>
   );
-};
+});
 
 const TasksList = ({navigation}: Props) => {
   const dispatch = useAppDispatch();
-  const {
-    entities: tasks,
-    status,
-    error,
-    pagination,
-  } = useAppSelector(state => state.task);
+  const {user_id} = useAppSelector(state => state.user.data);
+  const {tasks, page_no, total_pages} = useAppSelector(state => state.task);
 
   useEffect(() => {
-    dispatch(fetchTasks({page: 1, perPage: 10}));
-  }, [dispatch]);
-
-  const handleDeleteTask = (taskId: string) => {
-    dispatch(deleteTask(taskId));
-  };
-
-  const handleEditTask = (taskId: string) => {
-    setTimeout(() => {
-      navigation.navigate('CreateTask');
-    }, 500);
-  };
+    dispatch(
+      fetchTasksAsync({
+        userId: user_id,
+        page: 1,
+        perPage: 10,
+      }),
+    );
+  }, []);
 
   const [isVisibleModal, setIsVisibleModal] = useState(false);
-  const [activeId, setActiveId] = useState<null | string>(null);
+  const [activeId, setActiveId] = useState<null | number>(null);
 
   const handlePagination = () => {
-    console.log('testing');
-    if ((pagination.page_no as number) < (pagination.total_pages as number)) {
-      dispatch(fetchTasks({page: pagination.page_no + 1, perPage: 10}));
+    if ((page_no as number) < (total_pages as number)) {
+      dispatch(
+        fetchTasksAsync({
+          userId: user_id,
+          page: page_no + 1,
+          perPage: 10,
+        }),
+      );
     }
   };
 
-  const openModal = (data: string) => {
-    setActiveId(data);
+  const openModal = useCallback((id: number) => {
+    setActiveId(id);
     setIsVisibleModal(true);
-  };
+  }, []);
 
-  const renderTasks = ({item, index}: any) => {
+  const renderTasks = ({item, _index}: any) => {
     return (
       <TaskCard
-        key={index}
-        id={item._id}
-        title={item.title}
-        description={item.description}
-        priority={item.priority}
-        time={item.time_line}
-        openMenu={(data: string) => openModal(data)}
+        id={item.task_id}
+        title={item.task_title}
+        description={item.task_Description}
+        status={item.task_status}
+        time={item.task_due_date}
+        openMenu={(data: number) => openModal(data)}
       />
     );
   };
@@ -96,10 +92,10 @@ const TasksList = ({navigation}: Props) => {
   return (
     <PageView statusBar safeAreaView>
       <FlatList
+        maxToRenderPerBatch={10}
         contentContainerStyle={{flexGrow: 1}}
-        initialNumToRender={30}
+        initialNumToRender={10}
         showsVerticalScrollIndicator={false}
-        keyExtractor={(item: any) => item._id}
         data={tasks}
         renderItem={renderTasks}
         ItemSeparatorComponent={() => <Spacer direction="vertical" size={15} />}
@@ -122,7 +118,7 @@ const TasksList = ({navigation}: Props) => {
         }}>
         <TouchableOpacity
           onPress={() => {
-            console.log(tasks), navigation.navigate('CreateTask');
+            navigation.navigate('CreateTask');
           }}
           style={{
             backgroundColor: Color.BRAND_PRIMARY_DEFAULT,
@@ -141,8 +137,8 @@ const TasksList = ({navigation}: Props) => {
         </TouchableOpacity>
 
         <Modal
-          animationIn={'fadeIn'}
-          animationOut={'fadeOut'}
+          animationIn={'slideInUp'}
+          animationOut={'slideOutDown'}
           onBackdropPress={() => setIsVisibleModal(false)}
           isVisible={isVisibleModal}>
           <View style={styles.container}>
@@ -154,8 +150,9 @@ const TasksList = ({navigation}: Props) => {
                 borderRadius: 10,
               }}
               onPress={() => {
+                activeId &&
+                  navigation.navigate('TaskDetails', {task_id: activeId});
                 setIsVisibleModal(false);
-                handleEditTask(activeId);
               }}>
               <Text
                 style={{
@@ -164,7 +161,7 @@ const TasksList = ({navigation}: Props) => {
                   ...CUSTOM_FONT.SemiBold,
                   color: Color.WHITE,
                 }}>
-                Edit Task
+                Update Task
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -175,8 +172,8 @@ const TasksList = ({navigation}: Props) => {
                 borderRadius: 10,
               }}
               onPress={() => {
+                activeId && dispatch(deleteTaskAsync(activeId));
                 setIsVisibleModal(false);
-                handleDeleteTask(activeId);
               }}>
               <Text
                 style={{
@@ -201,7 +198,7 @@ const styles = StyleSheet.create({
   container: {
     minWidth: 323,
     borderRadius: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Color.WHITE,
     padding: 20,
   },
 });
